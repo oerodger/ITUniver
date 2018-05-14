@@ -10,6 +10,13 @@ namespace ELMA.EleWise.Calc
     {
         static void Main(string[] args)
         {
+            if (args.Length != 2)
+            {
+                Console.WriteLine("Не указаны аргументы");
+                return;
+            }
+            Console.WriteLine(Convert.ToInt64(args[0]) + Convert.ToInt64(args[1]));
+            Console.ReadKey();
         }
     }
 }
