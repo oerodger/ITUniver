@@ -1,12 +1,15 @@
 ﻿using Autofac;
 using Autofac.Integration.Mvc;
 using Docflow.App_Start;
+using Docflow.Auth;
 using Docflow.Controllers;
 using Docflow.Models;
 using Docflow.Models.Repositories;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
+using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
+using Microsoft.Owin.Security.Cookies;
 using NHibernate;
 using NHibernate.Tool.hbm2ddl;
 using Owin;
@@ -18,6 +21,7 @@ using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Microsoft.AspNet.Identity.Owin;
 
 [assembly: OwinStartup(typeof(Startup))]
 namespace Docflow.App_Start
@@ -65,6 +69,18 @@ namespace Docflow.App_Start
 
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
             app.UseAutofacMiddleware(container);
+
+            app.CreatePerOwinContext(() => 
+                new UserManager(new IdentityStore(DependencyResolver.Current.GetServices<ISession>().FirstOrDefault())));
+            app.CreatePerOwinContext<SignInManager>((options, context) => 
+                new SignInManager(context.GetUserManager<UserManager>(), context.Authentication));
+
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
+                AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
+                LoginPath = new PathString("/Account/Login"),
+                Provider = new CookieAuthenticationProvider()
+            });
         }
     }
 }

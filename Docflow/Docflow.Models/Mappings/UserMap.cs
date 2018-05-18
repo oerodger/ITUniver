@@ -12,7 +12,7 @@ namespace Docflow.Models.Mappings
         public UserMap()
         {
             Id(u => u.Id).GeneratedBy.Identity();
-            Map(u => u.Login).Length(30);
+            Map(u => u.UserName).Length(30);
             Map(u => u.Password).Column("PasswordHash");
             Map(u => u.Name).Length(100);
         }
