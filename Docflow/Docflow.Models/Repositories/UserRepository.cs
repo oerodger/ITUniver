@@ -17,6 +17,13 @@ namespace Docflow.Models.Repositories
             this.session = session;
         }
 
+        public List<User> GetAll()
+        {
+            return session.CreateCriteria<User>()
+                .List<User>()
+                .ToList();
+        }
+
         public void Save(User user)
         {
             using (var tr = session.BeginTransaction())

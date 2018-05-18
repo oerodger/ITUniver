@@ -1,7 +1,25 @@
-﻿
+﻿@model Docflow.Models.UserListViewModel
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Список пользователей";
 }
 
-<h2>Index</h2>
+<h2>Список пользователей</h2>
+
+<table>
+    <tr>
+        <td>Идентификатор</td>
+        <td>Имя</td>
+        <td>Логин</td>
+    </tr>
+    @foreach (var user in Model.Users)
+    {
+        <tr>
+            <td>@user.Id</td>
+            <td>@user.Name</td>
+            <td>@user.UserName</td>
+        </tr>
+    }
+</table>
+
+
 

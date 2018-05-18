@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Docflow.Models;
+using Docflow.Models.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -9,10 +11,21 @@ namespace Docflow.Controllers
     [Authorize]
     public class UserController : Controller
     {
+        private UserRepository userRepository;
+
+        public UserController(UserRepository userRepository)
+        {
+            this.userRepository = userRepository;
+        }
+
         // GET: User
         public ActionResult Index()
         {
-            return View();
+            var model = new UserListViewModel
+            {
+                Users = userRepository.GetAll()
+            };
+            return View(model);
         }
     }
 }

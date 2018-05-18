@@ -6,3 +6,13 @@
 <h2>Index</h2>
 
 @Html.ValidationSummary()
+
+<div>
+    @Html.ActionLink("Войти", "Login", "Account")
+</div>
+<div>
+    @Html.ActionLink("Выйти", "LogOff", "Account")
+</div>
+<div>
+    @Html.ActionLink("Пользователи", "Index", "User")
+</div>
