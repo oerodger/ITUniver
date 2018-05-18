@@ -1,0 +1,26 @@
+﻿@model Docflow.Models.LoginViewModel
+
+@{
+    ViewBag.Title = "Авторизация";
+}
+
+<h2>Авторизация</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary()
+    <table>
+        <tr>
+            <td>@Html.LabelFor(m => m.UserName)</td>
+            <td>@Html.EditorFor(m => m.UserName)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.Password)</td>
+            <td>@Html.EditorFor(m => m.Password)</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><button style="width:100%">Войти</button> </td>
+        </tr>
+    </table>
+}

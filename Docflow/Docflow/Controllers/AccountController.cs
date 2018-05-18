@@ -40,8 +40,40 @@ namespace Docflow.Controllers
             if (ModelState.IsValid)
             {
                 var result = SignInManager.PasswordSignIn(model.UserName, model.Password, false, false);
-
+                if (result == SignInStatus.Success)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Неверное имя пользователя или пароль");
+                }
             }
+            return View(model);
+        }
+
+        public ActionResult LogOff()
+        {
+            SignInManager.SignOut();
+            return RedirectToAction("Index", "Home");
+        }
+
+        public ActionResult CreateUser(string login, string password)
+        {
+            var user = new User { UserName = login };
+            var result = UserManager.CreateAsync(user, password);
+            if (result.Result.Succeeded)
+            {
+                SignInManager.SignIn(user, false, false);                
+            }
+            else
+            {
+                foreach (var error in result.Result.Errors)
+                {
+                    ModelState.AddModelError("", error);
+                }
+            }
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: Account
