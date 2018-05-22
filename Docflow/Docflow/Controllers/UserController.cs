@@ -27,5 +27,16 @@ namespace Docflow.Controllers
             };
             return View(model);
         }
+
+        public ActionResult Edit(long id)
+        {
+            var user = userRepository.Load(id);
+            return View(new UserViewModel {
+                Id = user.Id,
+                Name = user.Name,
+                UserName = user.UserName,
+                UserStatus = user.UserStatus
+            });
+        }
     }
 }

@@ -1,0 +1,10 @@
+﻿@using Docflow.Models
+@model Docflow.Models.UserStatus?
+
+@(Html.DropDownList("", Enum.GetValues(typeof(UserStatus))
+    .Cast<UserStatus>()
+    .Select(e => new SelectListItem {
+        Text = Enum.GetName(typeof(UserStatus), e),
+        Value = e.ToString() ,
+        Selected = Model != null && Model.Value == e
+    }), new { @class = "form-control" }))

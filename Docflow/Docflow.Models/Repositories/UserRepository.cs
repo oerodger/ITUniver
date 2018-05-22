@@ -32,5 +32,10 @@ namespace Docflow.Models.Repositories
                 tr.Commit();
             }
         }
+
+        public User Load(long id)
+        {
+            return session.Load<User>(id);
+        }
     }
 }
