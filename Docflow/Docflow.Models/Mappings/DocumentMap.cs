@@ -12,7 +12,8 @@ namespace Docflow.Models.Mappings
         public DocumentMap()
         {
             Map(d => d.Description).Length(int.MaxValue);
-            HasMany(d => d.Versions).Inverse().AsList();
+            HasMany(d => d.Versions)
+                .KeyColumn("Document");
         }
     }
 }

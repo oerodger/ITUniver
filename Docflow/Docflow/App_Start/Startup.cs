@@ -24,6 +24,7 @@ using System.Web.Routing;
 using Microsoft.AspNet.Identity.Owin;
 using Docflow.Models.Listeners;
 using NHibernate.Event;
+using NHibernate.Dialect;
 
 [assembly: OwinStartup(typeof(Startup))]
 namespace Docflow.App_Start
@@ -47,8 +48,10 @@ namespace Docflow.App_Start
             {
                 var cfg = Fluently.Configure()
                     .Database(MsSqlConfiguration.MsSql2012
-                        .ConnectionString(connectionString.ConnectionString))
+                        .ConnectionString(connectionString.ConnectionString)
+                        .Dialect<MsSql2012Dialect>())
                     .Mappings(m => m.FluentMappings.AddFromAssemblyOf<User>())
+                    .ExposeConfiguration(SchemaMetadataUpdater.QuoteTableAndColumns)
                     .CurrentSessionContext("call");
                 var conf = cfg.BuildConfiguration();
                 var preInsertEventListeners = new List<IPreInsertEventListener>();
