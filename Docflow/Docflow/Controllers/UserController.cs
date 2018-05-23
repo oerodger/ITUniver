@@ -11,6 +11,11 @@ namespace Docflow.Controllers
     [Authorize]
     public class UserController : Controller
     {
+        protected override void OnException(ExceptionContext filterContext)
+        {
+            base.OnException(filterContext);
+        }
+
         private UserRepository userRepository;
 
         public UserController(UserRepository userRepository)
