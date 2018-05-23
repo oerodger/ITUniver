@@ -68,6 +68,9 @@
     <Compile Include="DocumentVersion.cs" />
     <Compile Include="File.cs" />
     <Compile Include="Folder.cs" />
+    <Compile Include="Listeners\ListenerAttribute.cs" />
+    <Compile Include="Listeners\ListenerType.cs" />
+    <Compile Include="Listeners\PreSaveFolderListener.cs" />
     <Compile Include="Mappings\DocumentMap.cs" />
     <Compile Include="Mappings\DocumentVersionMap.cs" />
     <Compile Include="Mappings\FileMap.cs" />

@@ -29,9 +29,10 @@ namespace Docflow.Models.Repositories
 
         public virtual void Save(T entity)
         {
-            using (session.BeginTransaction())
+            using (var tr = session.BeginTransaction())
             {
                 session.Save(entity);
+                tr.Commit();
             }
         }
     }

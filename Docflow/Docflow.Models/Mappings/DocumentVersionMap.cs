@@ -15,7 +15,7 @@ namespace Docflow.Models.Mappings
             Map(f => f.CreationDate);
             References(f => f.CreationAuthor);
             Map(f => f.ChangeDate);
-            References(f => f.CreationAuthor);
+            References(f => f.ChangeAuthor);
             References(f => f.File);
             References(f => f.Document);
         }

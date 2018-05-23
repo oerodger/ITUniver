@@ -1,60 +1,57 @@
 ﻿@model Docflow.Models.FolderViewModel
 
 @{
-    var title = Model.CurrentFolder != null ? Model.CurrentFolder.Name : "";
+    var title = Model.CurrentFolder != null ? Model.CurrentFolder.Name : "Хранилище документов";
     ViewBag.Title = title;
 }
 
 <h2>@title</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Создать", "Create", new { id = Model.CurrentFolder != null ? Model.CurrentFolder.Id : (long?)null })
 </p>
-<table class="table">
-    <tr>
-        <th>
-            Название
-        </th>
-        <th>
-            Дата изменения
-        </th>
-        <th>
-            Автор изменения
-        </th>
-        <th></th>
-    </tr>
-    @if (Model.Parent != null)
-    {
-        <tr>
-            <td>
-                @Html.ActionLink("/...", "Index", new { id = Model.Parent.Id })
-            </td>
-            <td>
-                
-            </td>
-            <td>
-                
-            </td>           
-        </tr>
-    }
-    @foreach (var item in Model.Folders)
-    {
-        <tr>
-            <td>
-                @Html.ActionLink(item.Name, "Index", new { id = item.Id })
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ChangeDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ChangeAuthor)
-            </td>
-            @*<td>
-                    @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-                    @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-                    @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-                </td>*@
-        </tr>
-    }
 
-</table>
+    <table class="table">
+        <tr>
+            <th>
+                Название
+            </th>
+            <th>
+                Дата изменения
+            </th>
+            <th>
+                Автор изменения
+            </th>           
+        </tr>
+        @if (Model.Parent != null)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink("/...", "Index", new { id = Model.Parent.Id })
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+        }
+        @foreach (var item in Model.Folders)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.Name, "Index", new { id = item.Id })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ChangeDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ChangeAuthor)
+                </td>
+                @*<td>
+                        @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+                        @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+                        @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+                    </td>*@
+            </tr>
+        }
+
+    </table>
+

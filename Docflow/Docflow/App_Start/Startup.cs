@@ -22,6 +22,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Microsoft.AspNet.Identity.Owin;
+using Docflow.Models.Listeners;
+using NHibernate.Event;
 
 [assembly: OwinStartup(typeof(Startup))]
 namespace Docflow.App_Start
@@ -39,6 +41,7 @@ namespace Docflow.App_Start
                 throw new Exception("Не найдена строка соединения");
             }
 
+            var assembly = Assembly.GetAssembly(typeof(User));
             var builder = new ContainerBuilder();
             builder.Register(x =>
             {
@@ -47,7 +50,21 @@ namespace Docflow.App_Start
                         .ConnectionString(connectionString.ConnectionString))
                     .Mappings(m => m.FluentMappings.AddFromAssemblyOf<User>())
                     .CurrentSessionContext("call");
-                var schemaExport = new SchemaUpdate(cfg.BuildConfiguration());
+                var conf = cfg.BuildConfiguration();
+                var preInsertEventListeners = new List<IPreInsertEventListener>();
+                foreach (var type in assembly.GetTypes())
+                {
+                    var attr = (ListenerAttribute)type.GetCustomAttribute(typeof(ListenerAttribute));
+                    if (attr != null)
+                    {
+                        if (attr.ListenerType == Models.Listeners.ListenerType.PreInsert)
+                        {
+                            preInsertEventListeners.Add((IPreInsertEventListener)Activator.CreateInstance(type));
+                        }                       
+                    }
+                }
+                conf.EventListeners.PreInsertEventListeners = preInsertEventListeners.ToArray();
+               var schemaExport = new SchemaUpdate(conf);
                 schemaExport.Execute(true, true);
                 return cfg.BuildSessionFactory();
             }).As<ISessionFactory>().SingleInstance();
@@ -55,8 +72,7 @@ namespace Docflow.App_Start
                 .As<ISession>()
                 .InstancePerRequest();
             builder.RegisterControllers(Assembly.GetAssembly(typeof(AccountController)));
-            builder.RegisterModule(new AutofacWebTypesModule());
-            var assembly = Assembly.GetAssembly(typeof(User));
+            builder.RegisterModule(new AutofacWebTypesModule());           
             foreach (var type in assembly.GetTypes())
             {
                 var attr = type.GetCustomAttribute(typeof(RepositoryAttribute));
