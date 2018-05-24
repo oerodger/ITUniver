@@ -8,6 +8,8 @@ namespace Docflow.Models
 {
     public class FolderEditViewModel
     {
+        public Folder CurrentFolder { get; set; }
+
         public Folder ParentFolder { get; set; }
 
         [Display(Name = "Название")]

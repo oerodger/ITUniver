@@ -54,5 +54,16 @@ namespace Docflow.Controllers
             folderRepository.Save(folder);
             return RedirectToAction("Index", new { id = parent != null ? parent.Id : folder.Id });
         }
+
+        public ActionResult Edit(long id)
+        {
+            var folder = folderRepository.Load(id);
+            var model = new FolderEditViewModel
+            {
+                CurrentFolder = folder,
+                Name = folder.Name
+            };
+            return PartialView(model);
+        }
     }
 }

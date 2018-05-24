@@ -1,4 +1,5 @@
-﻿using Docflow.Models.Repositories;
+﻿using Docflow.Models.Autofac;
+using Docflow.Models.Repositories;
 using NHibernate.Event;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,6 @@ namespace Docflow.Models.Listeners
     [Listener(ListenerType = ListenerType.PreUpdate)]
     public class PreUpdateFolderEventListener : IPreUpdateEventListener
     {    
-
         public bool OnPreUpdate(PreUpdateEvent @event)
         {
             return SetProps(@event);
@@ -31,7 +31,7 @@ namespace Docflow.Models.Listeners
             if (folder != null)
             {
                 folder.ChangeDate = DateTime.Now;
-                folder.ChangeAuthor = DependencyResolver. UserRepository.GetCurrentUser();
+                folder.ChangeAuthor = Locator.GetService<UserRepository>().GetCurrentUser();
             }
             return false;
         }

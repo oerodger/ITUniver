@@ -1,0 +1,42 @@
+﻿@model Docflow.Extensions.PopupViewModel
+
+<div id="@Model.Options.Id" url="" title="@Model.Options.Header">
+    @if (Model.Render != null)
+    {
+        @Model.Render(Html)
+    }
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#@Model.Options.Id").dialog({
+            open: function (event, ui)
+            {
+                @if (!string.IsNullOrEmpty(Model.Options.Url))
+                {
+                    @: loadPopupContent();
+                }
+            },
+            modal: true,
+            autoOpen: false,
+            buttons: {
+                Save: function () {
+                    $("#@Model.Options.Id").find("form").submit();
+                    $(this).dialog("close");
+                },
+                Close: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+    });
+
+    function loadPopupContent()
+    {
+        $.ajax({
+            url: @(string.IsNullOrEmpty(Model.Options.Url)? string.Format("$(#{0}).attr('url')", Model.Options.Id) : Model.Options.Url),           
+        }).done(function (data) {
+            $("#@Model.Options.Id").html(data);
+        });
+    }
+</script>

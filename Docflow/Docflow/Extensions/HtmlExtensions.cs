@@ -13,11 +13,20 @@ namespace Docflow.Extensions
         public static MvcHtmlString GetCurrentUser(this HtmlHelper html)
         {
             var controller = html.ViewContext.Controller as BaseController;
-            if (controller != null)
+            if (controller != null && controller.CurrentUser != null)
             {
                 return html.Partial("DisplayTemplates/User", controller.CurrentUser);
             }
             return MvcHtmlString.Empty;
+        }
+
+        public static MvcHtmlString Popup(this HtmlHelper html, PopupOptions options, Func<HtmlHelper, MvcHtmlString> render = null)
+        {
+            var popup = new PopupViewModel {
+                Options = options,
+                Render = render
+            };
+            return html.Partial("Popup", popup);
         }
     }
 }

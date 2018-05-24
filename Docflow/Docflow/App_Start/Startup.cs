@@ -44,24 +44,19 @@ namespace Docflow.App_Start
             }
 
             var assembly = Assembly.GetAssembly(typeof(User));
-            var builder = new ContainerBuilder();
-            var preInsertEventListenerTypes = new List<Type>();
-            var preUpdateEventListenerTypes = new List<Type>();
+            var builder = new ContainerBuilder();            
             foreach (var type in assembly.GetTypes())
             {
                 var attr = (ListenerAttribute)type.GetCustomAttribute(typeof(ListenerAttribute));
                 if (attr != null)
-                {
-                    
+                {                    
                     switch (attr.ListenerType)
                     {
                         case Models.Listeners.ListenerType.PreInsert:
                             builder.RegisterType(type).As<IPreInsertEventListener>().PropertiesAutowired();
-                            //preInsertEventListenerTypes.Add(type);
                             break;
                         case Models.Listeners.ListenerType.PreUpdate:
-                            builder.RegisterType(type).As<IPreUpdateEventListener>().PropertiesAutowired();
-                            //preUpdateEventListenerTypes.Add(type);
+                            builder.RegisterType(type).As<IPreUpdateEventListener>().PropertiesAutowired();                            
                             break;
                     }
                 }
@@ -79,15 +74,7 @@ namespace Docflow.App_Start
                         c.EventListeners.PreUpdateEventListeners = x.Resolve<IPreUpdateEventListener[]>();
                     })
                     .CurrentSessionContext("call");
-                var conf = cfg.BuildConfiguration();               
-                /*conf.EventListeners.PreInsertEventListeners = preInsertEventListenerTypes
-                    .Select(t => x.Resolve(t))
-                    .OfType<IPreInsertEventListener>()
-                    .ToArray();
-                conf.EventListeners.PreUpdateEventListeners = preUpdateEventListenerTypes
-                    .Select(t => x.Resolve(t))
-                    .OfType<IPreUpdateEventListener>()
-                    .ToArray();*/
+                var conf = cfg.BuildConfiguration();
                 var schemaExport = new SchemaUpdate(conf);
                 schemaExport.Execute(true, true);
                 return cfg.BuildSessionFactory();
@@ -95,6 +82,9 @@ namespace Docflow.App_Start
             builder.Register(x => x.Resolve<ISessionFactory>().OpenSession())
                 .As<ISession>()
                 .InstancePerRequest();
+            builder.Register(x => x.Resolve<ISessionFactory>().OpenSession())
+                .As<ISession>()
+                .InstancePerDependency();
             builder.RegisterControllers(Assembly.GetAssembly(typeof(AccountController)));
             builder.RegisterModule(new AutofacWebTypesModule());           
             foreach (var type in assembly.GetTypes())

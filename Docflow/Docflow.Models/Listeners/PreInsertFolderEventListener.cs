@@ -1,4 +1,5 @@
-﻿using Docflow.Models.Repositories;
+﻿using Docflow.Models.Autofac;
+using Docflow.Models.Repositories;
 using Microsoft.AspNet.Identity;
 using NHibernate.Event;
 using System;
@@ -14,7 +15,6 @@ namespace Docflow.Models.Listeners
     [Listener(ListenerType = ListenerType.PreInsert)]
     public class PreInsertFolderEventListener : IPreInsertEventListener
     {        
-
         public bool OnPreInsert(PreInsertEvent @event)
         {
             return SetCreationProps(@event);
@@ -33,7 +33,7 @@ namespace Docflow.Models.Listeners
             if (folder != null)
             {
                 folder.CreationDate = DateTime.Now;
-                folder.CreationAuthor = DependencyResolver.GetCurrentUser();
+                folder.CreationAuthor = Locator.GetService<UserRepository>().GetCurrentUser();
             }
             return false;
         }
