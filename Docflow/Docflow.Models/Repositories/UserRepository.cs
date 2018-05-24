@@ -8,34 +8,11 @@ using System.Threading.Tasks;
 namespace Docflow.Models.Repositories
 {
     [Repository]
-    public class UserRepository
+    public class UserRepository: Repository<User>
     {
-        private ISession session;
-
-        public UserRepository(ISession session)
+        public UserRepository(ISession session): base(session)
         {
             this.session = session;
-        }
-
-        public List<User> GetAll()
-        {
-            return session.CreateCriteria<User>()
-                .List<User>()
-                .ToList();
-        }
-
-        public void Save(User user)
-        {
-            using (var tr = session.BeginTransaction())
-            {
-                session.Save(user);
-                tr.Commit();
-            }
-        }
-
-        public User Load(long id)
-        {
-            return session.Load<User>(id);
-        }
+        }        
     }
 }

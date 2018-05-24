@@ -1,0 +1,7 @@
+﻿@model Docflow.Models.User
+
+@if (Model != null)
+{
+    @(!string.IsNullOrEmpty(Model.Name) ? $"{Model.Name}({Model.UserName})" : Model.UserName)
+}
+

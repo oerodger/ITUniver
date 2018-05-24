@@ -10,23 +10,13 @@ using System.Web.Mvc;
 
 namespace Docflow.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
-        private UserRepository userRepository;
-
-        public SignInManager SignInManager
+       
+        public AccountController(UserRepository userRepository): 
+            base(userRepository)
         {
-            get { return HttpContext.GetOwinContext().Get<SignInManager>(); }
-        }
-
-        public UserManager UserManager
-        {
-            get { return HttpContext.GetOwinContext().GetUserManager<UserManager>(); }
-        }
-
-        public AccountController(UserRepository userRepository)
-        {
-            this.userRepository = userRepository;
+                   
         }
 
         public ActionResult Login()

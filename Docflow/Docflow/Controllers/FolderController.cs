@@ -9,11 +9,12 @@ using System.Web.Mvc;
 namespace Docflow.Controllers
 {
     [Authorize]
-    public class FolderController : Controller
+    public class FolderController : BaseController
     {
         private FolderRepository folderRepository;
 
-        public FolderController(FolderRepository folderRepository)
+        public FolderController(FolderRepository folderRepository, UserRepository userRepository): 
+            base(userRepository)
         {
             this.folderRepository = folderRepository;
         }
