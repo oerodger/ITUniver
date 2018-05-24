@@ -25,6 +25,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Docflow.Models.Listeners;
 using NHibernate.Event;
 using NHibernate.Dialect;
+using Docflow.Models.Autofac;
 
 [assembly: OwinStartup(typeof(Startup))]
 namespace Docflow.App_Start
@@ -51,14 +52,16 @@ namespace Docflow.App_Start
                 var attr = (ListenerAttribute)type.GetCustomAttribute(typeof(ListenerAttribute));
                 if (attr != null)
                 {
-                    builder.RegisterType(type);
+                    
                     switch (attr.ListenerType)
                     {
                         case Models.Listeners.ListenerType.PreInsert:
-                            preInsertEventListenerTypes.Add(type);
+                            builder.RegisterType(type).As<IPreInsertEventListener>().PropertiesAutowired();
+                            //preInsertEventListenerTypes.Add(type);
                             break;
                         case Models.Listeners.ListenerType.PreUpdate:
-                            preUpdateEventListenerTypes.Add(type);
+                            builder.RegisterType(type).As<IPreUpdateEventListener>().PropertiesAutowired();
+                            //preUpdateEventListenerTypes.Add(type);
                             break;
                     }
                 }
@@ -70,17 +73,21 @@ namespace Docflow.App_Start
                         .ConnectionString(connectionString.ConnectionString)
                         .Dialect<MsSql2012Dialect>())
                     .Mappings(m => m.FluentMappings.AddFromAssemblyOf<User>())
-                    .ExposeConfiguration(SchemaMetadataUpdater.QuoteTableAndColumns)
+                    .ExposeConfiguration(c => {
+                        SchemaMetadataUpdater.QuoteTableAndColumns(c);
+                        c.EventListeners.PreInsertEventListeners = x.Resolve<IPreInsertEventListener[]>();
+                        c.EventListeners.PreUpdateEventListeners = x.Resolve<IPreUpdateEventListener[]>();
+                    })
                     .CurrentSessionContext("call");
                 var conf = cfg.BuildConfiguration();               
-                conf.EventListeners.PreInsertEventListeners = preInsertEventListenerTypes
+                /*conf.EventListeners.PreInsertEventListeners = preInsertEventListenerTypes
                     .Select(t => x.Resolve(t))
                     .OfType<IPreInsertEventListener>()
                     .ToArray();
                 conf.EventListeners.PreUpdateEventListeners = preUpdateEventListenerTypes
                     .Select(t => x.Resolve(t))
                     .OfType<IPreUpdateEventListener>()
-                    .ToArray();
+                    .ToArray();*/
                 var schemaExport = new SchemaUpdate(conf);
                 schemaExport.Execute(true, true);
                 return cfg.BuildSessionFactory();
@@ -100,6 +107,7 @@ namespace Docflow.App_Start
             }
             var container = builder.Build();
 
+            Locator.SetImpl(new AutofacLocatorImpl(container));
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
             app.UseAutofacMiddleware(container);
 

@@ -34,17 +34,7 @@ namespace Docflow.Controllers
         {
             get
             {
-                if (User == null || User.Identity == null)
-                {
-                    return null;
-                }
-                var currentUserId = User.Identity.GetUserId();
-                long userId;
-                if (string.IsNullOrEmpty(currentUserId) || !long.TryParse(currentUserId, out userId))
-                {
-                    return null;
-                }
-                return userRepository.Load(userId);
+                return userRepository.GetCurrentUser(User);                
             }
         }
     }
