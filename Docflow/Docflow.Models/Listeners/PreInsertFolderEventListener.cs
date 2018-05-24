@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Docflow.Models.Listeners
 {
     [Listener(ListenerType = ListenerType.PreInsert)]
-    public class PreSaveFolderListener : IPreInsertEventListener
+    public class PreInsertFolderEventListener : IPreInsertEventListener
     {
         public bool OnPreInsert(PreInsertEvent @event)
         {
