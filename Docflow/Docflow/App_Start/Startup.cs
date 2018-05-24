@@ -44,6 +44,25 @@ namespace Docflow.App_Start
 
             var assembly = Assembly.GetAssembly(typeof(User));
             var builder = new ContainerBuilder();
+            var preInsertEventListenerTypes = new List<Type>();
+            var preUpdateEventListenerTypes = new List<Type>();
+            foreach (var type in assembly.GetTypes())
+            {
+                var attr = (ListenerAttribute)type.GetCustomAttribute(typeof(ListenerAttribute));
+                if (attr != null)
+                {
+                    builder.RegisterType(type);
+                    switch (attr.ListenerType)
+                    {
+                        case Models.Listeners.ListenerType.PreInsert:
+                            preInsertEventListenerTypes.Add(type);
+                            break;
+                        case Models.Listeners.ListenerType.PreUpdate:
+                            preUpdateEventListenerTypes.Add(type);
+                            break;
+                    }
+                }
+            }
             builder.Register(x =>
             {
                 var cfg = Fluently.Configure()
@@ -53,21 +72,16 @@ namespace Docflow.App_Start
                     .Mappings(m => m.FluentMappings.AddFromAssemblyOf<User>())
                     .ExposeConfiguration(SchemaMetadataUpdater.QuoteTableAndColumns)
                     .CurrentSessionContext("call");
-                var conf = cfg.BuildConfiguration();
-                var preInsertEventListeners = new List<IPreInsertEventListener>();
-                foreach (var type in assembly.GetTypes())
-                {
-                    var attr = (ListenerAttribute)type.GetCustomAttribute(typeof(ListenerAttribute));
-                    if (attr != null)
-                    {
-                        if (attr.ListenerType == Models.Listeners.ListenerType.PreInsert)
-                        {
-                            preInsertEventListeners.Add((IPreInsertEventListener)Activator.CreateInstance(type));
-                        }                       
-                    }
-                }
-                conf.EventListeners.PreInsertEventListeners = preInsertEventListeners.ToArray();
-               var schemaExport = new SchemaUpdate(conf);
+                var conf = cfg.BuildConfiguration();               
+                conf.EventListeners.PreInsertEventListeners = preInsertEventListenerTypes
+                    .Select(t => x.Resolve(t))
+                    .OfType<IPreInsertEventListener>()
+                    .ToArray();
+                conf.EventListeners.PreUpdateEventListeners = preUpdateEventListenerTypes
+                    .Select(t => x.Resolve(t))
+                    .OfType<IPreUpdateEventListener>()
+                    .ToArray();
+                var schemaExport = new SchemaUpdate(conf);
                 schemaExport.Execute(true, true);
                 return cfg.BuildSessionFactory();
             }).As<ISessionFactory>().SingleInstance();

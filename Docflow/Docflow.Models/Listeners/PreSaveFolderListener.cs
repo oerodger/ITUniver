@@ -13,29 +13,24 @@ namespace Docflow.Models.Listeners
     {
         public bool OnPreInsert(PreInsertEvent @event)
         {
-            var folder = @event.Entity as Folder;
-            if (folder != null)
-            {
-                SetCreationProps(folder);
-            }
-            return false;
+            return SetCreationProps(@event);
         }
 
         public Task<bool> OnPreInsertAsync(PreInsertEvent @event, CancellationToken cancellationToken)
         {   
             return new Task<bool>(() => {
-                var folder = @event.Entity as Folder;
-                if (folder != null)
-                {
-                    SetCreationProps(folder);
-                }
-                return false;
+                return SetCreationProps(@event);                
             });
         }
 
-        private void SetCreationProps(Folder folder)
-        {
-            folder.CreationDate = DateTime.Now;
+        private bool SetCreationProps(PreInsertEvent @event)
+        {            
+            var folder = @event.Entity as Folder;
+            if (folder != null)
+            {
+                folder.CreationDate = DateTime.Now;
+            }
+            return false;
         }
     }
 }

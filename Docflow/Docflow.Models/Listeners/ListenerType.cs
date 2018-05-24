@@ -8,6 +8,7 @@ namespace Docflow.Models.Listeners
 {
     public enum ListenerType
     {
-        PreInsert
+        PreInsert,
+        PreUpdate
     }
 }
