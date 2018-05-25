@@ -16,7 +16,7 @@ namespace Docflow.Models.Mappings
             References(f => f.CreationAuthor);
             Map(f => f.ChangeDate);
             References(f => f.ChangeAuthor);
-            References(f => f.File);
+            References(f => f.File).Cascade.SaveUpdate();
             References(f => f.Document).Column("Document");
         }
     }

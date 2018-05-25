@@ -33,7 +33,7 @@ namespace Docflow.Models.Listeners
             if (folder != null)
             {
                 folder.CreationDate = DateTime.Now;
-                folder.CreationAuthor = Locator.GetService<UserRepository>().GetCurrentUser();
+                //folder.CreationAuthor = Locator.GetService<UserRepository>().GetCurrentUser();
             }
             return false;
         }

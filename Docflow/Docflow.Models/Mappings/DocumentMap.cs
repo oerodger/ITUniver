@@ -13,6 +13,7 @@ namespace Docflow.Models.Mappings
         {
             Map(d => d.Description).Length(int.MaxValue);
             HasMany(d => d.Versions)
+                .Cascade.SaveUpdate()
                 .KeyColumn("Document");
         }
     }

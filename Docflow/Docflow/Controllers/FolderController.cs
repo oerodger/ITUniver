@@ -19,14 +19,14 @@ namespace Docflow.Controllers
             this.folderRepository = folderRepository;
         }
 
-        public ActionResult Index(long? id)
+        public ActionResult Index(long? id, FetchOptions options)
         {
             var folder = id.HasValue ? folderRepository.Load(id.Value) : null;
             var model = new FolderViewModel
             {
                 CurrentFolder = folder,
                 Parent = folder != null && folder.ParentFolder != null ? folder.ParentFolder : null,
-                Folders = folderRepository.GetFolders(id)
+                Folders = folderRepository.GetFolders(id, options)
             };
             return View(model);
         }

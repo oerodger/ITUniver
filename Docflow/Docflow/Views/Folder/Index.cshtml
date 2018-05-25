@@ -5,35 +5,64 @@
 @{
     var title = Model.CurrentFolder != null ? Model.CurrentFolder.Name : "Хранилище документов";
     ViewBag.Title = title;
+    var currentFolderId = Model.CurrentFolder != null ? Model.CurrentFolder.Id : (long?)null;
 }
 
 <h2>@title</h2>
 
 <p>
-    @Html.ActionLink("Создать", "Create", new { id = Model.CurrentFolder != null ? Model.CurrentFolder.Id : (long?)null })
+    @Html.ActionLink("Создать папку", "Create", new { id = currentFolderId })
+    @if (currentFolderId.HasValue)
+    {
+     @Html.ActionLink("Создать документ", "Create", "Document", new { id = currentFolderId }, null)
+    }
 </p>
 
     <table class="table">
         <tr>
             <th>
-                Название
+                @if (currentFolderId.HasValue)
+                {
+                    @Html.SortLink("Название", "Name", "Index", "Folder", new RouteValueDictionary { { "id", currentFolderId } })
+                }
+                else
+                {
+                    @: Название
+                }
             </th>
             <th>
-                Дата изменения
+                @if (currentFolderId.HasValue)
+                {
+                    @Html.SortLink("Дата изменения", "ChangeDate", "Index", "Folder", new RouteValueDictionary { { "id", currentFolderId } })
+                }
+                else
+                {
+                     @: Дата изменения
+                }
             </th>
             <th>
-                Автор изменения
-            </th>           
+                @if (currentFolderId.HasValue)
+                {
+                    @Html.SortLink("Автор изменения", "ChangeAuthor", "Index", "Folder", new RouteValueDictionary { { "id", currentFolderId } })
+                }
+                else
+                {
+                    @: Автор изменения
+                }
+            </th>    
+            <th>                
+            </th>
         </tr>
         @if (Model.Parent != null)
         {
-            <tr>
-                <td>
-                    @Html.ActionLink("/...", "Index", new { id = Model.Parent.Id })
-                </td>
-                <td></td>
-                <td></td>
-            </tr>
+        <tr>
+            <td>
+                @Html.ActionLink("/...", "Index", new { id = Model.Parent.Id })
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
         }
         @foreach (var item in Model.Folders)
         {

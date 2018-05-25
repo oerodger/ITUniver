@@ -9,6 +9,7 @@ namespace Docflow.Models
     public class File
     {
         public virtual long Id { get; set; }
+        public virtual string Name { get; set; }
         public virtual byte[] Content { get; set; }
     }
 }

@@ -8,6 +8,11 @@ namespace Docflow.Models
 {
     public class Document : Folder
     {
+        public Document()
+        {
+            Versions = new List<DocumentVersion>();
+        }
+
         public virtual string Description { get; set; }
         public virtual IList<DocumentVersion> Versions { get; set;}
     }

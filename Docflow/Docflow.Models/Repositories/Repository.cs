@@ -1,9 +1,11 @@
 ﻿using NHibernate;
+using NHibernate.Criterion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 
 namespace Docflow.Models.Repositories
 {
@@ -22,9 +24,24 @@ namespace Docflow.Models.Repositories
             return session.Load<T>(id);
         }
 
-        public virtual IList<T> GetAll()
+        protected virtual void SetFetchOptions(ICriteria crit, FetchOptions options)
         {
-            return session.CreateCriteria<T>().List<T>();
+            if (!string.IsNullOrEmpty(options.SortExpression))
+            {
+                crit.AddOrder(options.SortDirection == SortDirection.Ascending ?
+                    Order.Asc(options.SortExpression) :
+                    Order.Desc(options.SortExpression));
+            }
+        }
+
+        public virtual IList<T> GetAll(FetchOptions options = null)
+        {
+            var crit = session.CreateCriteria<T>();
+            if (options != null)
+            {
+                SetFetchOptions(crit, options);
+            }
+            return crit.List<T>();
         }
 
         public virtual void Save(T entity)

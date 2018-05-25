@@ -13,6 +13,7 @@ namespace Docflow.Models.Mappings
         {
             Id(f => f.Id);
             Map(f => f.Content).Length(int.MaxValue);
+            Map(f => f.Name).Length(255);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Docflow.Models.Repositories
         {
         }
 
-        public IList<Folder> GetFolders(long? id)
+        public IList<Folder> GetFolders(long? id, FetchOptions options = null)
         {
             var crit = session.CreateCriteria<Folder>();
             if (id.HasValue)
@@ -25,6 +25,10 @@ namespace Docflow.Models.Repositories
             else
             {
                 crit = crit.Add(Restrictions.IsNull("ParentFolder"));
+            }
+            if (options != null)
+            {
+                SetFetchOptions(crit, options);
             }
             return crit.List<Folder>();
         }
