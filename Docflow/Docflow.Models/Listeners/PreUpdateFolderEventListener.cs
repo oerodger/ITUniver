@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Docflow.Models.Listeners
 {
-    [Listener(ListenerType = ListenerType.PreUpdate)]
+    [Listener]
     public class PreUpdateFolderEventListener : IPreUpdateEventListener
     {    
         public bool OnPreUpdate(PreUpdateEvent @event)

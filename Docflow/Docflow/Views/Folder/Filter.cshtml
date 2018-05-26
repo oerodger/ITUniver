@@ -1,0 +1,14 @@
+﻿@model Docflow.Models.FolderFilter
+
+@using (Html.BeginForm("Index", "Folder", FormMethod.Get))
+{
+    <div>
+        Название: @Html.EditorFor(m => m.Name)
+    </div>
+    <div>
+        Дата создания: @Html.EditorFor(m => m.CreationDate)
+    </div>
+    <div>
+        <input type="submit" value="Поиск" />
+    </div>
+}

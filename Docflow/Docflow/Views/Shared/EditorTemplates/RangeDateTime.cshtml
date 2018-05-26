@@ -1,0 +1,10 @@
+﻿@model  Docflow.Models.RangeDateTime
+
+@if (Model != null)
+{
+   @(Html.EditorFor(m => m.From)) 
+   @: -
+   @(Html.EditorFor(m => m.To))
+
+
+}

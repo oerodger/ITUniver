@@ -10,6 +10,10 @@
 
 <h2>@title</h2>
 
+<div style="padding: 20px;">
+    @Html.Partial("Filter", new FolderFilter())
+</div>
+
 <p>
     @Html.ActionLink("Создать папку", "Create", new { id = currentFolderId })
     @if (currentFolderId.HasValue)

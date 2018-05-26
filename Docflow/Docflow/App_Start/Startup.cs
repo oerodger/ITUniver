@@ -49,16 +49,13 @@ namespace Docflow.App_Start
             {
                 var attr = (ListenerAttribute)type.GetCustomAttribute(typeof(ListenerAttribute));
                 if (attr != null)
-                {                    
-                    switch (attr.ListenerType)
+                {
+                    var interfaces = type.GetInterfaces();
+                    var b = builder.RegisterType(type);
+                    foreach (var inter in interfaces)
                     {
-                        case Models.Listeners.ListenerType.PreInsert:
-                            builder.RegisterType(type).As<IPreInsertEventListener>().PropertiesAutowired();
-                            break;
-                        case Models.Listeners.ListenerType.PreUpdate:
-                            builder.RegisterType(type).As<IPreUpdateEventListener>().PropertiesAutowired();                            
-                            break;
-                    }
+                        b = b.As(inter);
+                    }                  
                 }
             }
             builder.Register(x =>

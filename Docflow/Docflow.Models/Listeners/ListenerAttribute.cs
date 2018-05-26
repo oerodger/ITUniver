@@ -8,6 +8,6 @@ namespace Docflow.Models.Listeners
 {
     public class ListenerAttribute: Attribute
     {
-        public ListenerType ListenerType { get; set; }
+        
     }
 }

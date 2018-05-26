@@ -221,6 +221,8 @@
     <Content Include="Views\Document\Create.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\HttpPostedFileBase.cshtml" />
     <Content Include="Views\Shared\SortLink.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\RangeDateTime.cshtml" />
+    <Content Include="Views\Folder\Filter.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

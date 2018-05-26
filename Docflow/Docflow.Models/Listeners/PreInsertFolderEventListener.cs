@@ -12,7 +12,7 @@ using System.Web;
 
 namespace Docflow.Models.Listeners
 {
-    [Listener(ListenerType = ListenerType.PreInsert)]
+    [Listener]
     public class PreInsertFolderEventListener : IPreInsertEventListener
     {        
         public bool OnPreInsert(PreInsertEvent @event)
